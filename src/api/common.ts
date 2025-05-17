@@ -1,0 +1,1 @@
+export const API_ROOT = import.meta.env.VITE_API_ROOT !== undefined ? import.meta.env.VITE_API_ROOT : 'http://localhost:8888';

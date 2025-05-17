@@ -1,7 +1,9 @@
+import { API_ROOT } from './api/common';
 /// <reference types="vite/client" />
 
 <script setup lang="ts">
-console.log(import.meta.env.VITE_API_ROOT)
+import {API_ROOT} from './api/common';
+console.log("API ROOT", API_ROOT);
 </script>
 
 <template>
