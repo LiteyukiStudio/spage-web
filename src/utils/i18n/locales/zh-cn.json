@@ -1,4 +1,14 @@
 {
+    "ui": {
+        "login": "登录",
+        "register": "注册",
+        "logout": "登出",
+        "username": "用户名",
+        "password": "密码",
+        "comfirm_password": "确认密码",
+        "email": "电子邮件",
+        "please_input": "请输入"
+    },
     "message": {
         "login": {
             "success": "登录成功",

@@ -1,12 +1,11 @@
 // src/router/index.ts
 import { createRouter, createWebHistory } from 'vue-router'
 import { getUserInfo } from '../api/user'
-import { ElNotification } from 'element-plus'
-import { useI18n } from 'vue-i18n'
 
 const routes = [
   { path: '/', component: () => import('../pages/Home.vue'), name: 'home' },
   { path: '/login', component: () => import('../pages/Login.vue'), name: 'login' },
+  { path: '/register', component: () => import('../pages/Register.vue'), name: 'register' },
   // { path: '/:owner', component: () => import('../pages/owner/Index.vue'), name: 'owner' },
   // { path: '/:owner/:project', component: () => import('../pages/project/Index.vue'), name: 'owner-project' },
   // { path: '/:owner/:project/:site', component: () => import('../pages/site/Index.vue'), name: 'owner-project-site' },

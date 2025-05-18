@@ -1,126 +1,101 @@
 <template>
     <div class="login-container">
         <el-card class="login-card">
-            <div class="switch-tabs">
-                <span :class="{ active: activeTab === 'login' }" @click="activeTab = 'login'">登录</span>
-                <span :class="{ active: activeTab === 'register' }" @click="activeTab = 'register'">注册</span>
-                <div class="switch-underline" :style="{ left: activeTab === 'login' ? '0' : '50%' }"></div>
+            <div class="login-title">
+                <img src="../assets/logo.svg" alt="Logo" style="height: 4rem;" />
+                <p style="font-size: 2rem; font-weight: bold; margin-top: 0;">{{ t('ui.login') }}</p>
             </div>
-            <transition name="fade-slide" mode="out-in">
-                <div :key="activeTab">
-                    <el-form v-if="activeTab === 'login'" :model="loginForm" @submit.prevent="onLogin">
-                        <el-form-item>
-                            <el-input v-model="loginForm.username" placeholder="用户名" prefix-icon="User" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-input v-model="loginForm.password" type="password" placeholder="密码"
-                                prefix-icon="Lock" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" style="width: 100%;" @click="onLogin">登录</el-button>
-                        </el-form-item>
-                        <el-alert v-if="loginError" :title="loginError" type="error" show-icon class="login-error" />
-                    </el-form>
-                    <el-form v-else :model="registerForm" @submit.prevent="onRegister">
-                        <el-form-item>
-                            <el-input v-model="registerForm.username" placeholder="用户名" prefix-icon="User" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-input v-model="registerForm.password" type="password" placeholder="密码"
-                                prefix-icon="Lock" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-input v-model="registerForm.confirm" type="password" placeholder="确认密码"
-                                prefix-icon="Lock" />
-                        </el-form-item>
-                        <el-form-item>
-                            <el-button type="primary" style="width: 100%;" @click="onRegister">注册</el-button>
-                        </el-form-item>
-                        <el-alert v-if="registerError" :title="registerError" type="error" show-icon
-                            class="login-error" />
-                    </el-form>
+            <Captcha :provider="provider" :site-key="siteKey" :url="url"></Captcha>
+            <el-form @submit.prevent="handleLogin" :model="form" :rules="rules" ref="loginForm" label-position="top">
+                <el-form-item prop="username">
+                    <el-input v-model="form.username" :placeholder="t('ui.username')" autocomplete="username"
+                        :prefix-icon=User />
+                </el-form-item>
+                <el-form-item prop="password">
+                    <el-input v-model="form.password" :placeholder="t('ui.password')" type="password"
+                        autocomplete="current-password" :prefix-icon=Lock show-password />
+                </el-form-item>
+
+                <el-form-item>
+                    <el-button type="primary" style="width: 100%;" :loading="loading" @click="handleLogin">
+                        {{ t('ui.login') }}
+                    </el-button>
+                </el-form-item>
+
+                <div v-if="error" class="login-error" style="color: #f56c6c;">
+                    {{ error }}
                 </div>
-            </transition>
+            </el-form>
         </el-card>
     </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-import { login, getUserInfo } from '../api/user'
-import { ElNotification } from 'element-plus'
+import { onMounted, ref } from 'vue';
 import { useI18n } from 'vue-i18n';
 import { useRouter, useRoute } from 'vue-router'
+import Captcha from '../views/Captcha.vue';
+import { getCaptcha } from '../api/captcha'
+import { User, Lock } from '@element-plus/icons-vue'
 
 const router = useRouter()
 const route = useRoute()
+const { t, } = useI18n()
+
+// Captcha
+const siteKey = ref('')
+const provider = ref('')
+const url = ref('')
+
+const form = ref({ username: '', password: '' })
+const error = ref('')
+const rules = {
+    username: [
+        { required: true, message: t('ui.please_input') + t('ui.username'), trigger: 'blur' }
+    ],
+    password: [
+        { required: true, message: t('ui.please_input') + t('ui.password'), trigger: 'blur' }
+    ]
+}
+const loading = ref(false)
 
 function onLoginSuccess() {
-  // 登录成功后跳转
-  const redirect = route.query.redirect as string
-  router.replace(redirect || '/')
+    // 登录成功后跳转
+    const redirect = route.query.redirect as string
+    router.replace(redirect || '/')
 }
-const { t,  } = useI18n()
-const activeTab = ref<'login' | 'register'>('login')
 
-const loginForm = ref({
-    username: '',
-    password: ''
-})
-const loginError = ref('')
-
-const registerForm = ref({
-    username: '',
-    password: '',
-    confirm: ''
-})
-const registerError = ref('')
-
-function onLogin() {
-    login(loginForm.value.username, loginForm.value.password)
-        .then(() => {
-            // 登录成功后获取用户信息
-            getUserInfo()
-                .then((user) => {
-                    localStorage.setItem('language', user.language)
-                })
-                .catch((error) => {
-                    ElNotification({
-                        title: t('message.userinfo.error'),
-                        message: error.response?.data?.message || t('message.unknown.error'),
-                        type: 'error'
-                    })
-                })
-            // 登录成功后跳转
-            ElNotification({
-                title: t('message.login.success'),
-                type: 'success'
-            })
+function handleLogin() {
+    // 登录逻辑
+    const { username, password } = form.value
+    if (!username || !password) {
+        error.value = t('ui.loginError')
+        return
+    }
+    loading.value = true
+    error.value = ''
+    // 模拟登录请求
+    setTimeout(() => {
+        loading.value = false
+        if (username === 'admin' && password === 'admin') {
             onLoginSuccess()
-        })
-        .catch((error) => {
-            ElNotification({
-                title: t('message.login.error.title'),
-                message: error.response?.data?.message || t('message.login.error.title'),
-                type: 'error'
-            })
-            loginError.value = error.message
-        })
+        } else {
+            error.value = t('ui.loginError')
+        }
+    }, 1000)
 }
 
-function onRegister() {
-    if (!registerForm.value.username || !registerForm.value.password) {
-        registerError.value = '请填写所有字段'
-        return
-    }
-    if (registerForm.value.password !== registerForm.value.confirm) {
-        registerError.value = '两次输入的密码不一致'
-        return
-    }
-    registerError.value = ''
-    alert('注册成功')
-    activeTab.value = 'login'
-}
+
+onMounted(async () => {
+    // 获取验证码
+    await getCaptcha().then((res) => {
+        siteKey.value = res.site_key
+        provider.value = res.provider
+        url.value = res.url
+    }).catch((err) => {
+        console.error(err)
+    })
+})
 
 </script>
 
@@ -136,6 +111,7 @@ function onRegister() {
 .login-card {
     width: 350px;
     padding: 24px 16px 16px 16px;
+    border-radius: var(--card-br);
 }
 
 .login-title {
