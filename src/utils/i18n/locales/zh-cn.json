@@ -1,0 +1,34 @@
+{
+    "message": {
+        "login": {
+            "success": "登录成功",
+            "error": {
+                "title": "登录失败",
+                "invalid_credentials": "用户名或密码错误",
+                "account_locked": "账户已锁定",
+                "account_disabled": "账户已禁用",
+                "password_expired": "密码已过期",
+                "too_many_attempts": "尝试次数过多，请稍后再试"
+            }
+        },
+        "register": {
+            "success": "注册成功",
+            "error": {
+                "email_exists": "电子邮件已存在",
+                "username_exists": "用户名已存在",
+                "weak_password": "密码强度不足",
+                "invalid_email": "无效的电子邮件地址"
+            }
+        },
+        "unknown": {
+            "error": "发生未知错误"
+        },
+        "userinfo": {
+            "success": "用户信息获取成功",
+            "error": {
+                "not_found": "用户信息未找到",
+                "access_denied": "访问被拒绝"
+            }
+        }
+    }
+}

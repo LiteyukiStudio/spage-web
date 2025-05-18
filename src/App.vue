@@ -1,13 +1,11 @@
 import { API_ROOT } from './api/common';
-/// <reference types="vite/client" />
 
 <script setup lang="ts">
-import {API_ROOT} from './api/common';
-console.log("API ROOT", API_ROOT);
+import Login from './pages/Login.vue';
 </script>
 
 <template>
-  <div><router-view /></div>
+  <Login/>
 </template>
 
 <style scoped>

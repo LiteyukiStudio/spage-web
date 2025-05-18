@@ -1,0 +1,7 @@
+{
+    "message": {
+        "login.success": "Login successful",
+        "register.success": "Registration successful",
+        "unknown.error": "An unknown error occurred"
+    }
+}
