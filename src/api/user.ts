@@ -13,14 +13,16 @@ export function checkToken(token: string): boolean {
  * @returns 用户信息
  * @throws 获取失败时抛出异常
  */
-export const login = async (username: string, password: string): Promise<{ message: string, token: string, refresh_token: string }> => {
-  let formData = new FormData();
-  formData.append("username", username);
-  formData.append("password", password);
-  const response = await apiClient.post("/user/login", formData, {
+export const login = async (username: string, password: string, captcha_token: string): Promise<{ message: string, token: string, refresh_token: string }> => {
+
+  const response = await apiClient.post("/user/login", {
+    username,
+    password,
+    captcha_token
+  }, {
     headers: {
-      "Content-Type": "application/x-www-form-urlencoded",
-    },
+      "Content-Type": "application/x-www-form-urlencoded"
+    }
   });
   if (response.status === 200) {
     return response.data;
