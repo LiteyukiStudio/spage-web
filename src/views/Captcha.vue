@@ -3,15 +3,12 @@
         <div v-if="provider == CaptchaProvider.Turnstile">
             <vue-turnstile :site-key="siteKey" v-model="token" />
         </div>
-        <div v-else-if="provider == CaptchaProvider.hCaptcha">
-            <vue-hcaptcha :siteKey="siteKey"></vue-hcaptcha>
-        </div>
     </div>
 </template>
 <script setup lang="ts">
 import VueTurnstile from 'vue-turnstile';
 import { CaptchaProvider } from '../const';
-import { ref } from 'vue';
+import { ref, watch } from 'vue';
 
 const token = ref('')
 defineProps<{
@@ -20,10 +17,13 @@ defineProps<{
   url: string
 }>()
 
-defineEmits<{
+const emit = defineEmits<{
   (e: 'update:token', token: string): void
 }>()
 
+watch(token, (val) => {
+  emit('update:token', val)
+})
 </script>
 <style lang="">
 

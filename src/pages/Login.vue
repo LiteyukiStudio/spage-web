@@ -5,7 +5,7 @@
                 <img src="../assets/logo.svg" alt="Logo" style="height: 4rem;" />
                 <p style="font-size: 2rem; font-weight: bold; margin-top: 0;">{{ t('ui.login') }}</p>
             </div>
-            <Captcha :provider="provider" :site-key="siteKey" :url="url"></Captcha>
+            <Captcha :provider="provider" :site-key="siteKey" :url="url" @update:token="token = $event"></Captcha>
             <el-form @submit.prevent="handleLogin" :model="form" :rules="rules" ref="loginForm" label-position="top">
                 <el-form-item prop="username">
                     <el-input v-model="form.username" :placeholder="t('ui.username')" autocomplete="username"
@@ -17,7 +17,7 @@
                 </el-form-item>
 
                 <el-form-item>
-                    <el-button type="primary" style="width: 100%;" :loading="loading" @click="handleLogin">
+                    <el-button type="primary" style="width: 100%;" :loading="loading" @click="handleLogin" :disabled="!token || loading">
                         {{ t('ui.login') }}
                     </el-button>
                 </el-form-item>
@@ -46,6 +46,7 @@ const { t, } = useI18n()
 const siteKey = ref('')
 const provider = ref('')
 const url = ref('')
+const token = ref('')
 
 const form = ref({ username: '', password: '' })
 const error = ref('')
