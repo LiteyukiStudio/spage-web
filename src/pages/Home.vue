@@ -19,7 +19,6 @@ import DefaultLayout from '../layouts/DefaultLayout.vue'
 import DefaultLayoutVue from '../layouts/DefaultLayout.vue'
 export default {
   components: { DefaultLayout },
-    
 }
 </script>
 <style lang="">

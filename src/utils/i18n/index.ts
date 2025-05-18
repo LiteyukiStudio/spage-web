@@ -10,5 +10,3 @@ export const i18n = createI18n({
     'zh-cn': zhcn
   }
 })
-
-console.log(zhcn)

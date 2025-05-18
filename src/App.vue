@@ -1,11 +1,10 @@
 import { API_ROOT } from './api/common';
 
 <script setup lang="ts">
-import Login from './pages/Login.vue';
 </script>
 
 <template>
-  <Login/>
+  <router-view />
 </template>
 
 <style scoped>

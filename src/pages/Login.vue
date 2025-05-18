@@ -50,6 +50,16 @@ import { ref } from 'vue'
 import { login, getUserInfo } from '../api/user'
 import { ElNotification } from 'element-plus'
 import { useI18n } from 'vue-i18n';
+import { useRouter, useRoute } from 'vue-router'
+
+const router = useRouter()
+const route = useRoute()
+
+function onLoginSuccess() {
+  // 登录成功后跳转
+  const redirect = route.query.redirect as string
+  router.replace(redirect || '/')
+}
 const { t,  } = useI18n()
 const activeTab = ref<'login' | 'register'>('login')
 
@@ -81,10 +91,12 @@ function onLogin() {
                         type: 'error'
                     })
                 })
+            // 登录成功后跳转
             ElNotification({
                 title: t('message.login.success'),
                 type: 'success'
             })
+            onLoginSuccess()
         })
         .catch((error) => {
             ElNotification({
@@ -109,6 +121,7 @@ function onRegister() {
     alert('注册成功')
     activeTab.value = 'login'
 }
+
 </script>
 
 <style scoped>
