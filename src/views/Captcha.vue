@@ -8,14 +8,16 @@
 <script setup lang="ts">
 import VueTurnstile from 'vue-turnstile';
 import { CaptchaProvider } from '../const';
-import { ref, watch } from 'vue';
+import { onMounted, ref, watch } from 'vue';
 
 const token = ref('')
-defineProps<{
+const props = defineProps<{
   provider: string
   siteKey: string
   url: string
 }>()
+
+console.log(props.provider, props.siteKey, props.url)
 
 const emit = defineEmits<{
   (e: 'update:token', token: string): void
@@ -23,6 +25,14 @@ const emit = defineEmits<{
 
 watch(token, (val) => {
   emit('update:token', val)
+})
+
+// 如果是 Disable，直接赋值并 emit
+onMounted(() => {
+  if (props.provider == CaptchaProvider.Disable) {
+    token.value = 'no-captcha'
+    emit('update:token', token.value)
+  }
 })
 </script>
 <style lang="">

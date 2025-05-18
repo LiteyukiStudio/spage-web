@@ -37,6 +37,7 @@ import { useRouter, useRoute } from 'vue-router'
 import Captcha from '../views/Captcha.vue';
 import { getCaptcha } from '../api/captcha'
 import { User, Lock } from '@element-plus/icons-vue'
+import { CaptchaProvider } from '../const';
 
 const router = useRouter()
 const route = useRoute()
@@ -93,6 +94,9 @@ onMounted(async () => {
         siteKey.value = res.site_key
         provider.value = res.provider
         url.value = res.url
+        if (provider.value == CaptchaProvider.Disable) {
+            token.value = 'no-captcha'
+        }
     }).catch((err) => {
         console.error(err)
     })
