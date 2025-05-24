@@ -3,6 +3,7 @@
         <div v-if="provider == CaptchaProvider.Turnstile">
             <vue-turnstile :site-key="siteKey" v-model="token" />
         </div>
+        <!-- other captcha -->
     </div>
 </template>
 <script setup lang="ts">
@@ -16,8 +17,6 @@ const props = defineProps<{
   siteKey: string
   url: string
 }>()
-
-console.log(props.provider, props.siteKey, props.url)
 
 const emit = defineEmits<{
   (e: 'update:token', token: string): void

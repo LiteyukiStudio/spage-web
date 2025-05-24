@@ -69,6 +69,7 @@ function onLoginSuccess() {
 
 function handleLogin() {
     // 登录逻辑
+    console.log('turnstile token:', token.value)
     const { username, password } = form.value
     if (!username || !password) {
         error.value = t('ui.loginError')
@@ -87,9 +88,8 @@ function handleLogin() {
     }, 1000)
 }
 
-
+// 获取验证码
 onMounted(async () => {
-    // 获取验证码
     await getCaptcha().then((res) => {
         siteKey.value = res.site_key
         provider.value = res.provider
